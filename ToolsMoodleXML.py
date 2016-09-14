@@ -30,6 +30,7 @@ class XMLSeries:
     def __init__(self,category):
         self.category=category
         self.exercices=[]
+        self.questiontext=set()
 
     def addExercice(self,exercice):
         self.exercices.append(exercice)
@@ -103,8 +104,7 @@ class DragDropText:
     '''
     def __init__(self,titre,corps,pieces,penalty="0.3333333",shuffle=1):
         self.titre=titre
-        self.corps=corps
-        self.pieces=pieces
+        self.contenu=(corps,pieces)
         if penalty=="0.3333333": penalty=penalite
         exerciceStructure=[
             u'<question type="ddwtos">',
@@ -202,6 +202,7 @@ class ClozeSerie:
 
     def makeSerie(self,consigne):
       result=[]
+      uniques=[]
       for nExercice,exercice in enumerate(self.exercices):
         for nElement,element in enumerate(exercice.boucle):
 #          print nElement,element
@@ -230,8 +231,13 @@ class ClozeSerie:
         for element in consigne.getConsigne(exercice):
           if element!="":
             exerciceCloze.append(element)
-        exerciceSerie=ClozeExercice(exercice.titre,"<br>\n".join(exerciceCloze))
-        result.append(exerciceSerie)
+        corps="<br>\n".join(exerciceCloze)
+        exerciceSerie=ClozeExercice(exercice.titre,corps)
+        if corps in uniques :
+            print nExercice,
+        else:
+            result.append(exerciceSerie)
+            uniques.append(corps)
       return result
 
 

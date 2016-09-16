@@ -55,7 +55,7 @@ class DragDropImage:
 
     on fournit le titre et le corps de la question à insérer tout prêts
     '''
-    def __init__(self,titre,consigne,image,pieces,penalty="0.3333333",shuffle=1):
+    def __init__(self,titre,consigne,image,pieces,penalty="0.3333333",shuffle=1,drag="text"):
         self.titre=titre
         self.consigne=consigne
         self.image=image
@@ -72,25 +72,49 @@ class DragDropImage:
                 ]
         dragPieces=[]
         dropPieces=[]
-        for num,piece in enumerate(pieces):
-            dragPiece=[
-                '<drag>',
-                    '<no>%d</no>'%(num+1),
-                    '<text>%s</text>'%piece["drag"],
-                    '<draggroup>1</draggroup>',
-                '</drag>'
-                ]
-            dragPieces.extend(dragPiece)
-            dropPiece=[
-                '<drop>',
-                    '<text></text>',
-                    '<no>%d</no>'%(num+1),
-                    '<choice>%d</choice>'%(num+1),
-                    '<xleft>%s</xleft>'%piece["drop"][0],
-                    '<ytop>%s</ytop>'%piece["drop"][1],
-                '</drop>'
-                ]
-            dropPieces.extend(dropPiece)
+        if drag=="text":
+            for num,piece in enumerate(pieces):
+                dragPiece=[
+                    '<drag>',
+                        '<no>%d</no>'%(num+1),
+                        '<text>%s</text>'%piece["drag"],
+                        '<draggroup>1</draggroup>',
+                    '</drag>'
+                    ]
+                dragPieces.extend(dragPiece)
+                dropPiece=[
+                    '<drop>',
+                        '<text></text>',
+                        '<no>%d</no>'%(num+1),
+                        '<choice>%d</choice>'%(num+1),
+                        '<xleft>%s</xleft>'%piece["drop"][0],
+                        '<ytop>%s</ytop>'%piece["drop"][1],
+                    '</drop>'
+                    ]
+                dropPieces.extend(dropPiece)
+        elif drag=="image":
+            for num,piece in enumerate(pieces):
+                dragPiece=[
+                    '<drag>',
+                        '<no>%d</no>'%(num+1),
+                        '<text></text>',
+                        '<file name="%s" encoding="base64">%s</file>'%(titre+'-%02d'%num,piece[0]),
+                        '<draggroup>1</draggroup>',
+                    '</drag>'
+                    ]
+                dragPieces.extend(dragPiece)
+                dropPiece=[
+                    '<drop>',
+                        '<text></text>',
+                        '<no>%d</no>'%(num+1),
+                        '<choice>%d</choice>'%(num+1),
+                        '<xleft>%s</xleft>'%piece[1][0],
+                        '<ytop>%s</ytop>'%piece[1][1],
+                    '</drop>'
+                    ]
+                dropPieces.extend(dropPiece)
+        else:
+            print u"type de drag non traité", drag
         exerciceStructure.extend(dragPieces)
         exerciceStructure.extend(dropPieces)
         exerciceStructure.append(u'</question>')

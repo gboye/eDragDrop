@@ -126,7 +126,7 @@ class DragDropText:
 
     on fournit le titre et le corps de la question à insérer tout prêts
     '''
-    def __init__(self,titre,corps,pieces,penalty="0.3333333",shuffle=1):
+    def __init__(self,titre,corps,pieces,penalty="0.3333333",shuffle=1,drag="text"):
         self.titre=titre
         self.contenu=(corps,pieces)
         if penalty=="0.3333333": penalty=penalite
@@ -141,13 +141,22 @@ class DragDropText:
                 u'<penalty>%s</penalty>'%penalty,
                 ]
         dragPieces=[]
-        for piece in pieces:
-            dragPiece=[
-                '<dragbox>',
-                    '<text>%s</text>'%piece,
-                    '<group>1</group>',
-                '</dragbox>'
-                ]
+        for num,piece in enumerate(pieces):
+            if drag=="text":
+                dragPiece=[
+                    '<dragbox>',
+                        '<text>%s</text>'%piece,
+                        '<group>1</group>',
+                    '</dragbox>'
+                    ]
+            elif drag=="image":
+                dragPiece=[
+                    '<dragbox>',
+                        '<text></text>',
+                        '<file name="%s" encoding="base64">%s</file>'%(titre+'-%02d'%num,piece),
+                        '<group>1</group>',
+                    '</dragbox>'
+                    ]
             dragPieces.extend(dragPiece)
         exerciceStructure.extend(dragPieces)
         exerciceStructure.append(u'</question>')

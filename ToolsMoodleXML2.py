@@ -266,6 +266,9 @@ class ClozeSerie:
             exerciceCloze.append(element)
         corps="<br>\n".join(exerciceCloze)
         exerciceSerie=ClozeExercice(exercice.titre,corps)
+        if 1:
+            warning.warn(corps)
+            warning.warn(uniques)
         if corps in uniques :
             print nExercice,
         else:
